@@ -19,7 +19,6 @@ type Click struct {
 type Clicks []Click
 
 func (clicks Clicks) Process(hashes map[string]string) (Results, error) {
-
 	counts := make(map[string]int, len(hashes))
 	for _, click := range clicks {
 		startTime, err := time.Parse(time.RFC3339, startDate)

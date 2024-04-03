@@ -81,7 +81,6 @@ func GetClicks(fname string) (click.Clicks, error) {
 
 	clicks := click.Clicks{}
 	if err := json.Unmarshal(decodes, &clicks); err != nil {
-		// TODO: error here
 		return nil, fmt.Errorf("file content can not be parsed: %w", err)
 	}
 
