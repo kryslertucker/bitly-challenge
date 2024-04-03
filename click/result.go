@@ -6,36 +6,46 @@ import (
 	"strings"
 )
 
+// Result defines the number of clicks per URL
 type Result struct {
 	LongURL string
 	Count   int
 }
 
-// A slice of Pairs that implements sort.Interface to sort by Value.
+// Results wraps a set of click counts per URL and implements sort.Interface to sort by Count.
 type Results []Result
 
 func (r Results) Swap(i, j int)      { r[i], r[j] = r[j], r[i] }
 func (r Results) Len() int           { return len(r) }
 func (r Results) Less(i, j int) bool { return r[i].Count < r[j].Count }
 
+// String is a custom implementation to be invoked when the of results
+// is converted to a string. It returns a string of an array of
+// objects separated by comma.
 func (r Results) String() string {
 	var builder strings.Builder
-	builder.WriteString("[")
+	fmt.Fprintf(&builder, "[")
 	for i, res := range r {
-		builder.WriteString(res.String())
+		fmt.Fprint(&builder, res.String())
 		if i == len(r)-1 {
 			break
 		}
-		builder.WriteString(", ")
+		fmt.Fprintf(&builder, ", ")
 	}
-	builder.WriteString("]")
+	fmt.Fprintf(&builder, "]")
 	return builder.String()
 }
 
+// String is the custom implementation of a result where
+// the object returned has a key being the longURL
+// and value being the count of clicks
 func (res Result) String() string {
 	return fmt.Sprintf("{\"%s\": %d}", res.LongURL, res.Count)
 }
 
+// Prepare iterates over each element in the map
+// representing the number of clicks per URL and returns
+// a slice sorted by count in descending order
 func Prepare(countsPerURL map[string]int) Results {
 	counts := Results{}
 	for longUrl, count := range countsPerURL {
