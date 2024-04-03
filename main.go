@@ -1,7 +1,34 @@
 package main
 
-import "fmt"
+import (
+	"bitcly/reader"
+	"fmt"
+)
+
+const (
+	encodesFile = "encodes.csv"
+	decodesFile = "decodes.json"
+)
 
 func main() {
-	fmt.Println("Hello, world.")
+	hashes, err := reader.GetHashes(encodesFile)
+	if err != nil {
+		// fmt.Errorf("could not read CSV file '%s': %w", encodesFile, err)
+		return
+	}
+
+	clicks, err := reader.GetClicks(decodesFile)
+	if err != nil {
+		// TODO: error here
+		return
+	}
+
+	counts, err := clicks.Process(hashes)
+	if err != nil {
+		// TODO: error here
+		return
+	}
+
+	fmt.Println(counts)
+
 }
