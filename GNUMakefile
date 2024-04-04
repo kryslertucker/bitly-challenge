@@ -10,7 +10,7 @@ bitcly: $(GO_FILES)
 
 clean:
 	rm -rf bitcly
-	go clean -cache -testcache
+	go clean -cache -testcache -modcache
 
 test:
 	go test -p 8 -cover --timeout 1m -race ./...

@@ -2,20 +2,22 @@
 
 This solution requires Golang v1.22.1 or higher. I have included a Makefile with useful targets for running and development.
 
-The code supports 4 log levels (DEBUG=-4,INFO=0, WARNING=4, and ERROR=8). It defaults to `INFO` level, but it can be configured by setting the `LOG_LEVEL` environment variable in the `.env` file. See `.env.example` for example values.
-
 ```bash
 $ make run
-```
-
-Run in debug mode:
-```bash
-$ LOG_LEVEL=4 make run
 ```
 
 To run the set of unit tests created:
 ```bash
 $ make clean test
+```
+
+## Logging
+
+The code supports 4 log levels (DEBUG=-4,INFO=0, WARNING=4, and ERROR=8). It defaults to `INFO` level, but it can be configured by setting the `LOG_LEVEL` environment variable in the `.env` file. See `.env.example` for example values.
+
+Run in debug mode:
+```bash
+$ LOG_LEVEL=-4 make run
 ```
 
 ## Dependencies

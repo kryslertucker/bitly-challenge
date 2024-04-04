@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/require" // TODO: external package
+	"github.com/stretchr/testify/require"
 )
 
 func TestMain(m *testing.M) {
