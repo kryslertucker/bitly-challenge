@@ -13,6 +13,7 @@ import (
 	"strings"
 )
 
+// ErrInvalidFile indicates the file is not considered valid
 var ErrInvalidFile = errors.New("file is not valid")
 
 // Path returns the full path of the files given a base path and a file name

@@ -33,7 +33,7 @@ type Clicks []Click
 func (clicks Clicks) Process(hashes map[string]string) (Results, error) {
 	startTime, err := time.Parse(time.RFC3339, startDate)
 	if err != nil {
-		return nil, fmt.Errorf("could not parse cut off date '%s': %w", cutOffDate, err)
+		return nil, fmt.Errorf("could not parse start date '%s': %w", startDate, err)
 	}
 
 	cutOffTime, err := time.Parse(time.RFC3339, cutOffDate)
