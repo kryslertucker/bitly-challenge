@@ -4,6 +4,8 @@ package click
 
 import (
 	"fmt"
+	"log/slog"
+	"net/url"
 	"strings"
 	"time"
 )
@@ -29,19 +31,26 @@ type Clicks []Click
 //
 // It returns a slice of Results sorted by count value in descending order
 func (clicks Clicks) Process(hashes map[string]string) (Results, error) {
+	startTime, err := time.Parse(time.RFC3339, startDate)
+	if err != nil {
+		return nil, fmt.Errorf("could not parse cut off date '%s': %w", cutOffDate, err)
+	}
+
+	cutOffTime, err := time.Parse(time.RFC3339, cutOffDate)
+	if err != nil {
+		return nil, fmt.Errorf("could not parse cut off date '%s': %w", cutOffDate, err)
+	}
+
 	counts := make(map[string]int, len(hashes))
 	for _, click := range clicks {
-		startTime, err := time.Parse(time.RFC3339, startDate)
-		if err != nil {
-			return nil, fmt.Errorf("could not parse cut off date '%s': %w", cutOffDate, err)
+		if click.Timestamp.Before(startTime) || click.Timestamp.After(cutOffTime) {
+			slog.Debug("Click event outside of window, omitting record", "ts", click.Timestamp)
+			continue
 		}
 
-		cutOffTime, err := time.Parse(time.RFC3339, cutOffDate)
+		_, err := url.ParseRequestURI(click.Bitlink)
 		if err != nil {
-			return nil, fmt.Errorf("could not parse cut off date '%s': %w", cutOffDate, err)
-		}
-		if click.Timestamp.Before(startTime) || click.Timestamp.After(cutOffTime) {
-			// TODO: log here
+			slog.Error("Invalid click event URL", "url", click.Bitlink)
 			continue
 		}
 
@@ -50,7 +59,7 @@ func (clicks Clicks) Process(hashes map[string]string) (Results, error) {
 
 		longUrl, ok := hashes[cleanLink]
 		if !ok {
-			// TODO: log here
+			slog.Debug("Click event for an unknown domain and hash, skipping record", "value", cleanLink)
 			continue
 		}
 		counts[longUrl]++
